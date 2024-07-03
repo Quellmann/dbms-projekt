@@ -1,17 +1,21 @@
-import { PlayCircleIcon } from "@heroicons/react/16/solid";
 import {
   AcademicCapIcon,
   ArrowPathIcon,
   AtSymbolIcon,
   CalendarDaysIcon,
   PencilSquareIcon,
+  PlusCircleIcon,
 } from "@heroicons/react/24/outline";
 import { useState, useEffect } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { API_BASE_URL } from "../config";
+import VideoCard from "../components/VideoCard";
+import { formatDistanceToNow } from "date-fns";
 
 function CoursePage() {
   const [course, setCourse] = useState({});
+  const [lectures, setLectures] = useState([]);
+  const [mostRecentLecture, setMostRecentLecture] = useState();
   const params = useParams();
 
   useEffect(() => {
@@ -27,9 +31,21 @@ function CoursePage() {
       }
     }
     getCourse();
-  }, []);
 
-  const lectures = [1, 2, 3, 4, 5, 6, 7, 8];
+    async function getLectures() {
+      try {
+        const response = await fetch(
+          `${API_BASE_URL}/course/${params.id.toString()}/lectures`
+        );
+        const data = await response.json();
+        setLectures(data);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    getLectures();
+    setMostRecentLecture(lectures.at(0));
+  }, [lectures.length]);
 
   return (
     <>
@@ -42,9 +58,14 @@ function CoursePage() {
             {course.name}
           </h1>
         </div>
-        <Link to={`/edit/${params.id.toString()}`} className="content-end">
-          <PencilSquareIcon className="size-8 dark:text-slate-200"></PencilSquareIcon>
-        </Link>
+        <div className="flex items-end gap-2">
+          <Link to={`/edit/${params.id.toString()}`} className="">
+            <PencilSquareIcon className="size-8 dark:text-slate-200"></PencilSquareIcon>
+          </Link>
+          <Link to={`/course/${params.id.toString()}/createLecture`}>
+            <PlusCircleIcon className="size-8 dark:text-slate-200"></PlusCircleIcon>
+          </Link>
+        </div>
       </div>
       <div className="mt-10">
         <div className="grid grid-cols-2 gap-x-4">
@@ -52,23 +73,17 @@ function CoursePage() {
             <div className="text-lg font-bold dark:text-slate-200">
               Watch the latest Lecture
             </div>
-            <div className="group p-1 mt-2 rounded-lg cursor-pointer bg-gray-50 dark:bg-slate-800 dark:hover:bg-sky-900">
-              {/* <div className="flex border rounded-lg h-80 bg-gray-900 items-center justify-center">
-                <PlayCircleIcon className="text-white w-20 h-20"></PlayCircleIcon>
-              </div> */}
-              <iframe
-                class="w-full aspect-video"
-                src="https://youtu.be/dQw4w9WgXcQ"
-              ></iframe>
-              {/* <div className="line-clamp-2 font-bold dark:text-slate-200 group-hover:text-sky-400">
-                Graphenalgorithmen Tiefensuche, Breitensuche und Dijkstra
-                aaaaaaaaaaaaaa
-              </div> */}
-              <div className="flex justify-between text-sm dark:text-slate-400">
-                <div>Views: 60</div>
-                <div>12h ago</div>
-              </div>
-            </div>
+            {mostRecentLecture ? (
+              <VideoCard
+                path={`/course/${params.id.toString()}/lecture/${
+                  mostRecentLecture._id
+                }
+              `}
+                data={mostRecentLecture}
+              ></VideoCard>
+            ) : (
+              ""
+            )}
           </div>
           <div>
             <h1 className="text-lg font-bold dark:text-slate-200">
@@ -94,13 +109,23 @@ function CoursePage() {
               <div className="flex p-4 gap-x-4 bg-gray-50 dark:bg-slate-800 dark:text-slate-200  items-center rounded-lg">
                 <CalendarDaysIcon className="h-6 w-6" />
                 <div className="">
-                  Lecturing days: <span className="font-bold">Tue, Thu</span>
+                  Lecturing days:{" "}
+                  <span className="font-bold">
+                    {course.lecturingDays?.join(", ")}
+                  </span>
                 </div>
               </div>
               <div className="flex p-4 gap-x-4 bg-gray-50 dark:bg-slate-800 dark:text-slate-200  items-center rounded-lg">
                 <ArrowPathIcon className="h-6 w-6" />
                 <div className="">
-                  Last Updated: <span className="font-bold">23h ago</span>
+                  Last Updated:{" "}
+                  <span className="font-bold">
+                    {course.lastUpdate
+                      ? formatDistanceToNow(new Date(course.lastUpdate), {
+                          addSuffix: true,
+                        })
+                      : ""}
+                  </span>
                 </div>
               </div>
             </div>
@@ -113,22 +138,12 @@ function CoursePage() {
         </div>
         <div className="grid grid-cols-4 gap-x-4 gap-y-10">
           {lectures.map((lecture) => (
-            <div
-              className="group p-1 rounded-lg h-60 cursor-pointer bg-gray-50 dark:bg-slate-800 dark:hover:bg-sky-900"
-              id={lecture}
-            >
-              <div className="flex border rounded-lg h-40 bg-gray-900 items-center justify-center">
-                <PlayCircleIcon className="text-white w-20 h-20"></PlayCircleIcon>
-              </div>
-              <div className="line-clamp-2 font-bold dark:text-slate-200 group-hover:text-sky-400">
-                Graphenalgorithmen Tiefensuche, Breitensuche und Dijkstra
-                aaaaaaaaaaaaaa
-              </div>
-              <div className="flex justify-between text-sm dark:text-slate-400">
-                <div>Views: 60</div>
-                <div>12h ago</div>
-              </div>
-            </div>
+            <VideoCard
+              key={lecture._id}
+              path={`/course/${params.id.toString()}/lecture/${lecture._id}
+          `}
+              data={lecture}
+            ></VideoCard>
           ))}
         </div>
       </div>

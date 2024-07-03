@@ -19,7 +19,7 @@ export async function getCourseById(req, res) {
     });
     res.status(200).json(course);
   } catch (error) {
-    console.error("Error fetching courses:", error);
+    console.error("Error fetching course:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 }
@@ -38,7 +38,7 @@ export async function setCourse(req, res) {
     });
     res.status(200).json(course);
   } catch (error) {
-    console.error("Error fetching courses:", error);
+    console.error("Error creating course:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 }
@@ -53,12 +53,12 @@ export async function updateCourse(req, res) {
       (course.lecturedBy = req.body.lecturedBy),
       (course.lecturingDays = req.body.lecturingDays),
       (course.studyProgram = req.body.studyProgram),
-      (course.isOpenToEnroll = true),
+      (course.isOpenToEnroll = req.body.isOpenToEnroll),
       course.save();
 
     res.status(200).json(course);
   } catch (error) {
-    console.error("Error fetching courses:", error);
+    console.error("Error updating course:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 }

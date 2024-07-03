@@ -47,6 +47,11 @@ export default function Example() {
     "Philosophie",
   ];
 
+  const handleRandomImage = () => {
+    const randomImage = `${Math.floor(Math.random() * 17)}.svg`;
+    updateForm({ image: randomImage });
+  };
+
   const handleDayChange = (event) => {
     const value = event.target.value;
     setForm((prevForm) => ({
@@ -94,6 +99,7 @@ export default function Example() {
     const semesterInfo = getSemesterInfo();
     setSemesterInfo(semesterInfo);
     updateForm({ lecturedBy: user.userId });
+    handleRandomImage();
 
     async function fetchCourse() {
       const id = params.id?.toString() || undefined;
@@ -146,14 +152,14 @@ export default function Example() {
     } catch (error) {
       console.error("A problem occurred with your fetch operation: ", error);
     } finally {
-      setForm({
-        name: "",
-        image: "",
-        semester: "",
-        studyProgram: [],
-        isOpenToEnroll: "",
-        lastUpdate: "",
-      });
+      // setForm({
+      //   name: "",
+      //   image: "",
+      //   semester: "",
+      //   studyProgram: [],
+      //   isOpenToEnroll: "",
+      //   lastUpdate: "",
+      // });
       navigate("/courselist");
     }
   }
@@ -161,7 +167,7 @@ export default function Example() {
   return (
     <form onSubmit={onSubmit}>
       <div className="mt-10 space-y-12">
-        <div className="border-b border-gray-900/10 pb-12">
+        <div className="border-b border-slate-900/10 dark:border-slate-300/10 pb-12">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-slate-200">
             {params.id ? "Edit Course" : "Create a new Course"}
           </h1>
@@ -240,38 +246,56 @@ export default function Example() {
               >
                 Course photo
               </label>
-              <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10 dark:border-slate-400 dark:bg-slate-800">
-                <div className="text-center">
-                  <PhotoIcon
-                    className="mx-auto h-12 w-12 text-gray-300"
-                    aria-hidden="true"
-                  />
-                  <div className="mt-4 flex items-center text-sm leading-6 dark:text-slate-400">
-                    <label
-                      htmlFor="file-upload"
-                      className="flex items-center gap-1 cursor-pointer rounded-xl p-2 dark:hover:bg-sky-900 dark:hover:text-sky-400 font-semibold dark:text-slate-200 dark:bg-slate-700 bg-gray-100 hover:bg-gray-300"
-                    >
-                      <ArrowUpOnSquareIcon className="size-8"></ArrowUpOnSquareIcon>
-                      <span className="flex-none">Upload a file</span>
-                      <input
-                        id="file-upload"
-                        name="file-upload"
-                        type="file"
-                        className="sr-only"
-                      />
-                    </label>
-                    <p className="pl-1">or drag and drop</p>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <div className="mt-2 flex flex-col justify-center rounded-lg border border-dashed border-gray-900/25 p-3 dark:border-slate-400 dark:bg-slate-800">
+                  <div className="flex justify-center">
+                    <img
+                      className="size-40 rounded-full"
+                      src={"/course-pictures/" + form.image}
+                      alt=""
+                    />
                   </div>
-                  <p className="text-xs leading-5 text-gray-600">
-                    PNG, JPG, GIF up to 10MB
-                  </p>
+                  <button
+                    type="button"
+                    onClick={handleRandomImage}
+                    className="mt-2 rounded-lg px-3 py-2 text-sm font-semibold dark:hover:bg-sky-900 dark:hover:text-sky-400 dark:text-slate-200 dark:bg-slate-700 bg-gray-100 hover:bg-gray-300"
+                  >
+                    Randomize
+                  </button>
+                </div>
+                <div className="mt-2 flex grow justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10 dark:border-slate-400 dark:bg-slate-800">
+                  <div className="text-center">
+                    <PhotoIcon
+                      className="mx-auto h-12 w-12 text-gray-300"
+                      aria-hidden="true"
+                    />
+                    <div className="mt-4 flex items-center text-sm leading-6 dark:text-slate-400">
+                      <label
+                        htmlFor="file-upload"
+                        className="flex items-center gap-1 cursor-pointer rounded-xl p-2 dark:hover:bg-sky-900 dark:hover:text-sky-400 font-semibold dark:text-slate-200 dark:bg-slate-700 bg-gray-100 hover:bg-gray-300"
+                      >
+                        <ArrowUpOnSquareIcon className="size-8"></ArrowUpOnSquareIcon>
+                        <span className="flex-none">Upload a file</span>
+                        <input
+                          id="file-upload"
+                          name="file-upload"
+                          type="file"
+                          className="sr-only"
+                        />
+                      </label>
+                      <p className="pl-1">or drag and drop</p>
+                    </div>
+                    <p className="text-xs leading-5 text-gray-600">
+                      PNG, JPG, GIF up to 10MB
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div className="border-b border-gray-900/10 pb-12">
-          <div className="grid grid-flow-col items-start">
+        <div className="border-b border-slate-900/10 dark:border-slate-300/10 pb-12">
+          <div className="grid gap-5 grid-flow-col items-start">
             <fieldset>
               <legend className="text-sm font-semibold leading-6 text-gray-900 dark:text-slate-200">
                 Study Program
@@ -291,9 +315,6 @@ export default function Example() {
                         value={program}
                         checked={form.studyProgram.includes(program)}
                         onChange={handleStudyProgramChange}
-                        // onChange={(e) =>
-                        //   updateForm({ studyProgram: e.target.value })
-                        // }
                         className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
                       />
                       <span className="text-gray-700 dark:text-slate-400">
@@ -304,16 +325,12 @@ export default function Example() {
                 </div>
               </div>
             </fieldset>
-          </div>
-        </div>
-        <div className="border-b border-gray-900/10 pb-12">
-          <div className="grid grid-flow-col items-start">
             <fieldset>
               <legend className="text-sm font-semibold leading-6 text-gray-900 dark:text-slate-200">
                 Lecturing Days
               </legend>
               <p className="mt-1 text-sm leading-6 text-gray-600 dark:text-slate-400">
-                Choose the days the course will get updated
+                Choose the days the course will get new lectures
               </p>
               <div className="mt-6 space-y-6">
                 <div className="relative grid-flow-col gap-x-3">
@@ -325,11 +342,7 @@ export default function Example() {
                       <input
                         type="checkbox"
                         value={day.value}
-                        // checked={selectedDays.includes(day.value)}
                         checked={form.lecturingDays.includes(day.value)}
-                        // onChange={(e) =>
-                        //   updateForm({ lecturingDays: e.target.value })
-                        // }
                         onChange={handleDayChange}
                         className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
                       />
@@ -341,6 +354,10 @@ export default function Example() {
                 </div>
               </div>
             </fieldset>
+          </div>
+        </div>
+        <div className="border-b border-slate-900/10 dark:border-slate-300/10 pb-12">
+          <div className="grid gap-5 grid-flow-col items-start">
             <fieldset>
               <legend className="text-sm font-semibold leading-6 text-gray-900 dark:text-slate-200">
                 Semester
@@ -366,6 +383,35 @@ export default function Example() {
                     </span>
                   </label>
                 ))}
+              </div>
+            </fieldset>
+            <fieldset>
+              <legend className="text-sm font-semibold leading-6 text-gray-900 dark:text-slate-200">
+                Open to Enroll
+              </legend>
+              <p className="mt-1 text-sm leading-6 text-gray-600 dark:text-slate-400">
+                An open course lets students freely join
+              </p>
+              <div className="mt-6 flex items-center space-x-2">
+                <div className="text-gray-600 dark:text-slate-400 w-12">
+                  {form.isOpenToEnroll ? "Open" : "Closed"}
+                </div>
+                <div
+                  className={`relative inline-flex items-center h-6 rounded-full w-11 cursor-pointer transition-colors duration-300 ${
+                    form.isOpenToEnroll ? "bg-blue-600" : "bg-gray-300"
+                  }`}
+                  onClick={(e) =>
+                    form.isOpenToEnroll
+                      ? updateForm({ isOpenToEnroll: false })
+                      : updateForm({ isOpenToEnroll: true })
+                  }
+                >
+                  <span
+                    className={`inline-block w-4 h-4 transform bg-white rounded-full transition-transform duration-300 ${
+                      form.isOpenToEnroll ? "translate-x-6" : "translate-x-1"
+                    }`}
+                  ></span>
+                </div>
               </div>
             </fieldset>
           </div>

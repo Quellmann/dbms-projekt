@@ -7,19 +7,23 @@ import CreatePassword from "./pages/create-password";
 import Layout from "./pages/layout";
 import AnonymousRoute from "./components/anonymous-route";
 import Me from "./pages/me";
-import CourseList from "./components/CourseList";
-import CoursePage from "./components/CoursePage";
-import CreateCourse from "./components/CreateCourse";
+import CourseList from "./pages/CourseList";
+import CoursePage from "./pages/CoursePage";
+import CreateCourse from "./pages/CreateCourse";
+import WatchLecture from "./pages/WatchLecture";
+import CreateLecture from "./pages/CreateLecture";
 import ProtectedRoute from "./components/protected-route";
 import AdminDashboard from "./pages/admin-dashboard";
 import TeacherDashboard from "./pages/teacher-dashboard";
 import NotFound from "./pages/not-found";
 import { Toaster } from "react-hot-toast";
+import { useState } from "react";
 
 function App() {
+  const [search, setSearch] = useState("");
   return (
     <Router>
-      <Layout>
+      <Layout setSearch={setSearch}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route
@@ -50,7 +54,7 @@ function App() {
             path="/courselist"
             element={
               <ProtectedRoute roles={["student", "teacher", "admin"]}>
-                <CourseList />
+                <CourseList search={search} />
               </ProtectedRoute>
             }
           />
@@ -59,6 +63,22 @@ function App() {
             element={
               <ProtectedRoute roles={["student", "teacher", "admin"]}>
                 <CoursePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/course/:id/lecture/:id"
+            element={
+              <ProtectedRoute roles={["student", "teacher", "admin"]}>
+                <WatchLecture />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/course/:id/createLecture"
+            element={
+              <ProtectedRoute roles={["teacher", "admin"]}>
+                <CreateLecture />
               </ProtectedRoute>
             }
           />

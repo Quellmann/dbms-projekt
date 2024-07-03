@@ -8,9 +8,8 @@ import {
 import MenuDropdown from "./MenuDropdown";
 import DarkmodeToggle from "./DarkmodeToggle";
 
-export default function Navbar() {
+export default function Navbar({ setSearch }) {
   const { user, logout } = useAuth();
-
   const handleLogout = () => {
     logout();
     navigate("/login");
@@ -55,6 +54,7 @@ export default function Navbar() {
               type="text"
               name="search"
               id="search"
+              onChange={(e) => setSearch(e.target.value)}
               className="w-full rounded-md py-2 pl-10 pr-4 text-gray-900 ring-1 ring-gray-300 dark:bg-slate-800 dark:text-slate-200 dark:hover:text-sky-400 dark:hover:bg-sky-900"
             />
           </div>
