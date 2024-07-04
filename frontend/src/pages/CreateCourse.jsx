@@ -48,7 +48,7 @@ export default function Example() {
   ];
 
   const handleRandomImage = () => {
-    const randomImage = `${Math.floor(Math.random() * 17)}.svg`;
+    const randomImage = `${Math.floor(Math.random() * 16)}.svg`;
     updateForm({ image: randomImage });
   };
 

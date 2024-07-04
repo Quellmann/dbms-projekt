@@ -7,12 +7,14 @@ import {
   PlusCircleIcon,
 } from "@heroicons/react/24/outline";
 import { useState, useEffect } from "react";
+import { useAuth } from "../context/UserContext";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { API_BASE_URL } from "../config";
 import VideoCard from "../components/VideoCard";
 import { formatDistanceToNow } from "date-fns";
 
 function CoursePage() {
+  const { user } = useAuth();
   const [course, setCourse] = useState({});
   const [lectures, setLectures] = useState([]);
   const [mostRecentLecture, setMostRecentLecture] = useState();
@@ -58,14 +60,16 @@ function CoursePage() {
             {course.name}
           </h1>
         </div>
-        <div className="flex items-end gap-2">
-          <Link to={`/edit/${params.courseId.toString()}`} className="">
-            <PencilSquareIcon className="size-8 dark:text-slate-200"></PencilSquareIcon>
-          </Link>
-          <Link to={`/course/${params.courseId.toString()}/createLecture`}>
-            <PlusCircleIcon className="size-8 dark:text-slate-200"></PlusCircleIcon>
-          </Link>
-        </div>
+        {["teacher", "admin"].includes(user.role) && (
+          <div className="flex items-end gap-2">
+            <Link to={`/edit/${params.courseId.toString()}`} className="">
+              <PencilSquareIcon className="size-8 dark:text-slate-200"></PencilSquareIcon>
+            </Link>
+            <Link to={`/course/${params.courseId.toString()}/createLecture`}>
+              <PlusCircleIcon className="size-8 dark:text-slate-200"></PlusCircleIcon>
+            </Link>
+          </div>
+        )}
       </div>
       <div className="mt-10">
         <div className="grid grid-cols-2 gap-x-4">

@@ -5,9 +5,11 @@ import {
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { API_BASE_URL } from "../config";
+import { useAuth } from "../context/UserContext";
 
 export default function CourseList({ search }) {
   const [courses, setCourses] = useState([]);
+  const { user } = useAuth();
 
   useEffect(() => {
     async function getCourses() {
@@ -34,9 +36,11 @@ export default function CourseList({ search }) {
           </h1>
         </div>
         <div>
-          <Link to="/createCourse">
-            <PlusCircleIcon className="size-8 dark:text-slate-200"></PlusCircleIcon>
-          </Link>
+          {["teacher", "admin"].includes(user.role) && (
+            <Link to="/createCourse">
+              <PlusCircleIcon className="size-8 dark:text-slate-200"></PlusCircleIcon>
+            </Link>
+          )}
         </div>
       </div>
       <ul role="list" className="flex flex-col grow gap-y-2 pt-5">
