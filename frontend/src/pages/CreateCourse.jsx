@@ -99,13 +99,15 @@ export default function Example() {
     const semesterInfo = getSemesterInfo();
     setSemesterInfo(semesterInfo);
     handleRandomImage();
-    updateForm({
-      lecturedBy: { userId: user.userId, username: user.username },
-    });
 
     async function fetchCourse() {
       const courseId = params.id?.toString() || undefined;
-      if (!courseId) return;
+      if (!courseId) {
+        updateForm({
+          lecturedBy: { userId: user.userId, username: user.username },
+        });
+        return;
+      }
       setIsNew(false);
       const response = await fetch(`${API_BASE_URL}/course/${courseId}`);
       if (!response.ok) {
