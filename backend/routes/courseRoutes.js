@@ -10,8 +10,8 @@ import { verifyAdmin, verifyTeacher } from "../middleware/authMiddleware.js";
 const router = Router();
 
 router.get("/courses", getCourses);
-router.get("/course/:id", getCourseById);
+router.get("/course/:courseId", getCourseById);
 router.post("/createCourse", setCourse);
-router.patch("/edit/:id", updateCourse);
+router.patch("/edit/:courseId", updateCourse);
 
 export default router;

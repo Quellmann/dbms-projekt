@@ -2,10 +2,9 @@ import { useAuth } from "../context/UserContext";
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { API_BASE_URL } from "../config";
-import { UserCircleIcon } from "@heroicons/react/24/solid";
+
 import {
   ArrowUpOnSquareIcon,
-  FolderPlusIcon,
   FilmIcon,
   DocumentArrowUpIcon,
   DocumentPlusIcon,
@@ -16,76 +15,14 @@ export default function Example() {
   const params = useParams();
   const { user } = useAuth();
 
-  const [semesterInfo, setSemesterInfo] = useState([]);
   const [isNew, setIsNew] = useState(true);
   const [form, setForm] = useState({
-    name: "",
+    title: "",
     description: "",
-    image: "",
-    semester: "",
-    studyProgram: [],
-    lecturedBy: "",
-    lecturingDays: [],
-    isOpenToEnroll: true,
+    videoUrl: "",
+    pdfUrl: "",
+    course: "",
   });
-
-  const daysOfWeek = [
-    { name: "Monday", value: "Monday" },
-    { name: "Tuesday", value: "Tuesday" },
-    { name: "Wednesday", value: "Wednesday" },
-    { name: "Thursday", value: "Thursday" },
-    { name: "Friday", value: "Friday" },
-    { name: "Saturday", value: "Saturday" },
-    { name: "Sunday", value: "Sunday" },
-  ];
-
-  const studyPrograms = [
-    "Informatik",
-    "Wirtschaftsinformatik",
-    "Wirtschaftswissenschaften",
-    "Mathematik",
-    "Physik",
-    "Biologie",
-    "Germanistik",
-    "Philosophie",
-  ];
-
-  const handleDayChange = (event) => {
-    const value = event.target.value;
-    setForm((prevForm) => ({
-      ...prevForm,
-      lecturingDays: prevForm.lecturingDays.includes(value)
-        ? prevForm.lecturingDays.filter((day) => day !== value)
-        : [...prevForm.lecturingDays, value],
-    }));
-  };
-
-  const handleStudyProgramChange = (event) => {
-    const value = event.target.value;
-    setForm((prevForm) => ({
-      ...prevForm,
-      studyProgram: prevForm.studyProgram.includes(value)
-        ? prevForm.studyProgram.filter((day) => day !== value)
-        : [...prevForm.studyProgram, value],
-    }));
-  };
-
-  const getSemesterInfo = () => {
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = now.getMonth() + 1;
-    const semesterInfo = [];
-
-    for (let i = 0; i < 4; i++) {
-      const monthCheck = (month + 6 * i) % 12;
-      if (3 <= monthCheck && monthCheck < 8) {
-        semesterInfo.push(`SS-${year + i}`);
-      } else {
-        semesterInfo.push(`WS-${year + i}/${year + 1 + i}`);
-      }
-    }
-    return semesterInfo;
-  };
 
   function updateForm(value) {
     return setForm((prev) => {
@@ -94,53 +31,57 @@ export default function Example() {
   }
 
   useEffect(() => {
-    const semesterInfo = getSemesterInfo();
-    setSemesterInfo(semesterInfo);
-    updateForm({ lecturedBy: user.userId });
-
-    async function fetchCourse() {
-      const id = params.id?.toString() || undefined;
-      if (!id) return;
+    async function fetchLecture() {
+      const lectureId = params.lectureId?.toString() || undefined;
+      if (!lectureId) return;
       setIsNew(false);
-      const response = await fetch(`${API_BASE_URL}/course/${id}`);
+      const response = await fetch(
+        `${API_BASE_URL}/course/${params.courseId}/lecture/${lectureId}`
+      );
       if (!response.ok) {
         const message = `An error has occurred: ${response.statusText}`;
         console.error(message);
         return;
       }
-      const course = await response.json();
-      if (!course) {
-        console.warn(`Course with id ${id} not found`);
+      const lecture = await response.json();
+      if (!lecture) {
+        console.warn(`Lecture with id ${lectureId} not found`);
         navigate("/");
         return;
       }
-      updateForm(course);
+      updateForm(lecture);
     }
-    fetchCourse();
+    fetchLecture();
     return;
   }, [params.id, navigate]);
 
   async function onSubmit(e) {
     e.preventDefault();
-    const course = { ...form };
+    const lecture = { ...form };
     try {
       let response;
       if (isNew) {
-        response = await fetch(`${API_BASE_URL}/createCourse`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(course),
-        });
+        response = await fetch(
+          `${API_BASE_URL}/course/${params.courseId}/createLecture`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(lecture),
+          }
+        );
       } else {
-        response = await fetch(`${API_BASE_URL}/edit/${params.id}`, {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(course),
-        });
+        response = await fetch(
+          `${API_BASE_URL}/course/${params.courseId}/edit/${params.lectureId}`,
+          {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(lecture),
+          }
+        );
       }
 
       if (!response.ok) {
@@ -149,14 +90,6 @@ export default function Example() {
     } catch (error) {
       console.error("A problem occurred with your fetch operation: ", error);
     } finally {
-      setForm({
-        name: "",
-        image: "",
-        semester: "",
-        studyProgram: [],
-        isOpenToEnroll: "",
-        lastUpdate: "",
-      });
       navigate("/courselist");
     }
   }
@@ -166,11 +99,11 @@ export default function Example() {
       <div className="mt-10 space-y-12">
         <div className="border-b border-gray-900/10 pb-12">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-slate-200">
-            {params.id ? "Edit Lecture" : "Create a new Lecture"}
+            {params.lectureId ? "Edit Lecture" : "Create a new Lecture"}
           </h1>
           <p className="mt-1 text-sm leading-6 text-gray-600 dark:text-slate-400">
             Please fill in all the necessary information for{" "}
-            {params.id
+            {params.lectureId
               ? "editing your existing lecture"
               : "creating a new lecture"}
           </p>
@@ -190,8 +123,8 @@ export default function Example() {
                     name="name"
                     id="name"
                     autoComplete="name"
-                    value={form.name}
-                    onChange={(e) => updateForm({ name: e.target.value })}
+                    value={form.title}
+                    onChange={(e) => updateForm({ title: e.target.value })}
                     className="w-full rounded-md py-2 pl-1 pr-4 text-gray-900 ring-1 ring-gray-300 dark:bg-slate-800 dark:text-slate-200 dark:hover:text-sky-400 dark:hover:bg-sky-900"
                   />
                 </div>

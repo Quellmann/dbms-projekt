@@ -22,7 +22,7 @@ function CoursePage() {
     async function getCourse() {
       try {
         const response = await fetch(
-          `${API_BASE_URL}/course/${params.id.toString()}`
+          `${API_BASE_URL}/course/${params.courseId.toString()}`
         );
         const data = await response.json();
         setCourse(data);
@@ -35,7 +35,7 @@ function CoursePage() {
     async function getLectures() {
       try {
         const response = await fetch(
-          `${API_BASE_URL}/course/${params.id.toString()}/lectures`
+          `${API_BASE_URL}/course/${params.courseId.toString()}/lectures`
         );
         const data = await response.json();
         setLectures(data);
@@ -59,10 +59,10 @@ function CoursePage() {
           </h1>
         </div>
         <div className="flex items-end gap-2">
-          <Link to={`/edit/${params.id.toString()}`} className="">
+          <Link to={`/edit/${params.courseId.toString()}`} className="">
             <PencilSquareIcon className="size-8 dark:text-slate-200"></PencilSquareIcon>
           </Link>
-          <Link to={`/course/${params.id.toString()}/createLecture`}>
+          <Link to={`/course/${params.courseId.toString()}/createLecture`}>
             <PlusCircleIcon className="size-8 dark:text-slate-200"></PlusCircleIcon>
           </Link>
         </div>
@@ -75,7 +75,7 @@ function CoursePage() {
             </div>
             {mostRecentLecture ? (
               <VideoCard
-                path={`/course/${params.id.toString()}/lecture/${
+                path={`/course/${params.courseId.toString()}/lecture/${
                   mostRecentLecture._id
                 }
               `}
@@ -140,7 +140,9 @@ function CoursePage() {
           {lectures.map((lecture) => (
             <VideoCard
               key={lecture._id}
-              path={`/course/${params.id.toString()}/lecture/${lecture._id}
+              path={`/course/${params.courseId.toString()}/lecture/${
+                lecture._id
+              }
           `}
               data={lecture}
             ></VideoCard>

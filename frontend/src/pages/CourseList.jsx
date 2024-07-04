@@ -12,11 +12,7 @@ export default function CourseList({ search }) {
   useEffect(() => {
     async function getCourses() {
       try {
-        const response = await fetch(`${API_BASE_URL}/courses`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
+        const response = await fetch(`${API_BASE_URL}/courses`);
         const data = await response.json();
         setCourses(data);
       } catch (error) {

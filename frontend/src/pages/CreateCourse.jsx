@@ -98,14 +98,16 @@ export default function Example() {
   useEffect(() => {
     const semesterInfo = getSemesterInfo();
     setSemesterInfo(semesterInfo);
-    updateForm({ lecturedBy: user.userId });
     handleRandomImage();
+    updateForm({
+      lecturedBy: { userId: user.userId, username: user.username },
+    });
 
     async function fetchCourse() {
-      const id = params.id?.toString() || undefined;
-      if (!id) return;
+      const courseId = params.id?.toString() || undefined;
+      if (!courseId) return;
       setIsNew(false);
-      const response = await fetch(`${API_BASE_URL}/course/${id}`);
+      const response = await fetch(`${API_BASE_URL}/course/${courseId}`);
       if (!response.ok) {
         const message = `An error has occurred: ${response.statusText}`;
         console.error(message);
@@ -113,7 +115,7 @@ export default function Example() {
       }
       const course = await response.json();
       if (!course) {
-        console.warn(`Course with id ${id} not found`);
+        console.warn(`Course with id ${courseId} not found`);
         navigate("/");
         return;
       }
@@ -152,14 +154,6 @@ export default function Example() {
     } catch (error) {
       console.error("A problem occurred with your fetch operation: ", error);
     } finally {
-      // setForm({
-      //   name: "",
-      //   image: "",
-      //   semester: "",
-      //   studyProgram: [],
-      //   isOpenToEnroll: "",
-      //   lastUpdate: "",
-      // });
       navigate("/courselist");
     }
   }
@@ -169,11 +163,11 @@ export default function Example() {
       <div className="mt-10 space-y-12">
         <div className="border-b border-slate-900/10 dark:border-slate-300/10 pb-12">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-slate-200">
-            {params.id ? "Edit Course" : "Create a new Course"}
+            {params.courseId ? "Edit Course" : "Create a new Course"}
           </h1>
           <p className="mt-1 text-sm leading-6 text-gray-600 dark:text-slate-400">
             Please fill in all the necessary information for{" "}
-            {params.id
+            {params.courseId
               ? "editing your existing course"
               : "creating a new Course"}
           </p>
@@ -235,7 +229,7 @@ export default function Example() {
                   className="h-12 w-12 text-gray-300"
                   aria-hidden="true"
                 />
-                {user.username}
+                {form.lecturedBy?.username}
               </div>
             </div>
 

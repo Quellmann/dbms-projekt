@@ -11,9 +11,9 @@ export async function getCourses(req, res) {
 }
 
 export async function getCourseById(req, res) {
-  const id = req.params.id;
+  const courseId = req.params.courseId;
   try {
-    const course = await Course.findById(id).populate({
+    const course = await Course.findById(courseId).populate({
       path: "lecturedBy",
       select: "username email",
     });
@@ -45,7 +45,7 @@ export async function setCourse(req, res) {
 
 export async function updateCourse(req, res) {
   try {
-    const course = await Course.findById(req.params.id);
+    const course = await Course.findById(req.params.courseId);
     (course.name = req.body.name),
       (course.description = req.body.description),
       (course.image = req.body.image),

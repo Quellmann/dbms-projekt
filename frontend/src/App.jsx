@@ -59,7 +59,7 @@ function App() {
             }
           />
           <Route
-            path="/course/:id"
+            path="/course/:courseId"
             element={
               <ProtectedRoute roles={["student", "teacher", "admin"]}>
                 <CoursePage />
@@ -67,7 +67,7 @@ function App() {
             }
           />
           <Route
-            path="/course/:id/lecture/:id"
+            path="/course/:courseId/lecture/:lectureId"
             element={
               <ProtectedRoute roles={["student", "teacher", "admin"]}>
                 <WatchLecture />
@@ -75,7 +75,15 @@ function App() {
             }
           />
           <Route
-            path="/course/:id/createLecture"
+            path="/course/:courseId/createLecture"
+            element={
+              <ProtectedRoute roles={["teacher", "admin"]}>
+                <CreateLecture />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/course/:courseId/edit/:lectureId"
             element={
               <ProtectedRoute roles={["teacher", "admin"]}>
                 <CreateLecture />

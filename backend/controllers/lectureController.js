@@ -2,7 +2,7 @@ import { Lecture } from "../models/lecture.js";
 
 export async function getLecturesByCourse(req, res) {
   try {
-    const lectures = await Lecture.find({ course: req.params.id }).sort({
+    const lectures = await Lecture.find({ course: req.params.courseId }).sort({
       lastUpdate: -1,
     });
     res.status(200).json(lectures);
@@ -13,9 +13,9 @@ export async function getLecturesByCourse(req, res) {
 }
 
 export async function getLectureById(req, res) {
-  const id = req.params.id;
+  const lectureId = req.params.lectureId;
   try {
-    const lecture = await Lecture.findById(id);
+    const lecture = await Lecture.findById(lectureId);
     res.status(200).json(lecture);
   } catch (error) {
     console.error("Error fetching lecture:", error);
@@ -31,7 +31,7 @@ export async function setLecture(req, res) {
       videoUrl: req.body.videoUrl,
       thumbnailUrl: req.body.thumbnailUrl,
       pdfUrl: req.body.pdfUrl,
-      course: req.body.course,
+      course: req.params.courseId,
     });
     res.status(200).json(lecture);
   } catch (error) {
@@ -42,13 +42,12 @@ export async function setLecture(req, res) {
 
 export async function updateLecture(req, res) {
   try {
-    const lecture = await Lecture.findById(req.params.id);
+    const lecture = await Lecture.findById(req.params.lectureId);
     (lecture.title = req.body.title),
       (lecture.description = req.body.description),
       (lecture.videoUrl = req.body.videoUrl),
       (lecture.thumbnailUrl = req.body.thumbnailUrl),
       (lecture.pdfUrl = req.body.pdfUrl),
-      (lecture.course = req.body.course),
       lecture.save();
     res.status(200).json(lecture);
   } catch (error) {
@@ -59,7 +58,7 @@ export async function updateLecture(req, res) {
 
 export async function increaseViewCount(req, res) {
   try {
-    const lecture = await Lecture.findById(req.params.id);
+    const lecture = await Lecture.findById(req.params.lectureId);
     lecture.views += 1;
     lecture.save();
     res.status(200).json(lecture);
