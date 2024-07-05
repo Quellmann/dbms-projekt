@@ -2,20 +2,15 @@ import { API_BASE_URL } from "../config";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/UserContext";
-import { PencilSquareIcon, PlusCircleIcon } from "@heroicons/react/24/outline";
+import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import CommentSection from "../components/CommentSection";
 import ReactPlayer from "react-player";
-import { pdfjs, Document, Page } from "react-pdf";
-
-pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-  "pdfjs-dist/build/pdf.worker.min.mjs",
-  import.meta.url
-).toString();
 
 const WatchLecture = () => {
   const { user } = useAuth();
   const params = useParams();
   const [lecture, setLecture] = useState({});
+  const [comments, setComments] = useState([]);
   const [notes, setNotes] = useState("");
 
   useEffect(() => {
@@ -35,6 +30,7 @@ const WatchLecture = () => {
         console.error(error);
       }
     }
+
     increaseViewCount();
     fetchLecture();
   }, []);
@@ -66,18 +62,18 @@ const WatchLecture = () => {
           <ReactPlayer
             width="100%"
             height="100%"
-            controls="true"
+            controls={true}
             url="/uploads/videos/example.mp4"
           ></ReactPlayer>
         </div>
-        <div className="col-span-1 border rounded-lg">
+        <div className="col-span-1 border rounded-lg dark:bg-slate-800 ">
           <CommentSection></CommentSection>
         </div>
       </div>
       <div className="mt-5 grid grid-flow-row grid-cols-2 gap-5">
         <div className="border rounded-lg aspect-square">
           <iframe
-            className="w-full h-full"
+            className="w-full h-full rounded-lg"
             src="/uploads/pdfs/example.pdf"
           ></iframe>
         </div>
@@ -85,8 +81,8 @@ const WatchLecture = () => {
           <textarea
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
-            className="w-full h-full p-2 border rounded-lg bg-orange-100"
-            placeholder="Write your notes here..."
+            className="w-full h-full text-gray-900 dark:text-slate-200 p-2 border rounded-lg bg-orange-50 dark:bg-sky-900/60 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"
+            placeholder="Write private notes here..."
           ></textarea>
         </div>
       </div>

@@ -2,9 +2,11 @@ import {
   AcademicCapIcon,
   ArrowPathIcon,
   AtSymbolIcon,
+  BookOpenIcon,
   CalendarDaysIcon,
   PencilSquareIcon,
   PlusCircleIcon,
+  PuzzlePieceIcon,
 } from "@heroicons/react/24/outline";
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/UserContext";
@@ -74,10 +76,10 @@ function CoursePage() {
       <div className="mt-10">
         <div className="grid grid-cols-2 gap-x-4">
           <div>
-            <div className="text-lg font-bold dark:text-slate-200">
+            <div className="text-lg mb-2 font-bold dark:text-slate-200">
               Watch the latest Lecture
             </div>
-            {mostRecentLecture ? (
+            {mostRecentLecture && (
               <VideoCard
                 path={`/course/${params.courseId.toString()}/lecture/${
                   mostRecentLecture._id
@@ -85,8 +87,6 @@ function CoursePage() {
               `}
                 data={mostRecentLecture}
               ></VideoCard>
-            ) : (
-              ""
             )}
           </div>
           <div>
@@ -120,6 +120,15 @@ function CoursePage() {
                 </div>
               </div>
               <div className="flex p-4 gap-x-4 bg-gray-50 dark:bg-slate-800 dark:text-slate-200  items-center rounded-lg">
+                <PuzzlePieceIcon className="h-6 w-6" />
+                <div className="">
+                  Quizpage:{" "}
+                  <Link to="/" className="font-bold text-blue-600">
+                    Link
+                  </Link>
+                </div>
+              </div>
+              <div className="flex p-4 gap-x-4 bg-gray-50 dark:bg-slate-800 dark:text-slate-200  items-center rounded-lg">
                 <ArrowPathIcon className="h-6 w-6" />
                 <div className="">
                   Last Updated:{" "}
@@ -134,6 +143,15 @@ function CoursePage() {
               </div>
             </div>
           </div>
+        </div>
+      </div>
+      <div className="mt-5">
+        <div className="mb-2 text-lg font-bold dark:text-slate-200">
+          Course Description
+        </div>
+        <div className="flex  p-4 gap-x-4 bg-gray-50 dark:bg-slate-800 dark:text-slate-200 items-start rounded-lg">
+          <BookOpenIcon className="size-6"></BookOpenIcon>
+          <div className="grow whitespace-pre-wrap">{course.description}</div>
         </div>
       </div>
       <div className="mt-5">

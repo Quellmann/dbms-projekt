@@ -6,22 +6,20 @@ const commentSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
-  author: {
+  user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
     required: true,
   },
-  postId: {
+  lectureId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Lecture", // Replace 'Post' with the name of the related model
     required: true,
   },
-  dateCreated: {
+  lastUpdate: {
     type: Date,
     default: Date.now,
   },
 });
 
-const Comment = mongoose.model("Comment", commentSchema);
-
-export default Comment;
+export const Comment = mongoose.model("Comment", commentSchema);

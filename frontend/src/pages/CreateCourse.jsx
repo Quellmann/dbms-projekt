@@ -104,7 +104,7 @@ export default function Example() {
       const courseId = params.id?.toString() || undefined;
       if (!courseId) {
         updateForm({
-          lecturedBy: { userId: user.userId, username: user.username },
+          lecturedBy: { _id: user.userId, username: user.username },
         });
         return;
       }
