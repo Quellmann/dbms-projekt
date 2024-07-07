@@ -9,10 +9,10 @@ import {
 
 const router = Router();
 
-router.get("/course/:courseId/lectures", getLecturesByCourse);
-router.get("/course/:courseId/lecture/:lectureId", getLectureById);
-router.post("/course/:courseId/createLecture", setLecture);
-router.patch("/course/:courseId/edit/:lectureId", updateLecture);
+router.get("/courses/:courseId/lectures", getLecturesByCourse);
+router.post("/courses/:courseId/lectures", setLecture);
+router.get("/courses/:courseId/lectures/:lectureId", getLectureById);
+router.patch("/courses/:courseId/edit/:lectureId", updateLecture);
 router.patch("/:lectureId/increaseViewCount", increaseViewCount);
 
 export default router;

@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/UserContext";
 
-const Home = () => {
+const LandingPage = () => {
   const { user } = useAuth();
 
   return (
@@ -34,4 +34,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default LandingPage;

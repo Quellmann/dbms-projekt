@@ -8,7 +8,7 @@ import {
   FolderPlusIcon,
 } from "@heroicons/react/24/outline";
 
-export default function Example() {
+export default function CreateCoursePage() {
   const navigate = useNavigate();
   const params = useParams();
   const { user } = useAuth();
@@ -109,7 +109,7 @@ export default function Example() {
         return;
       }
       setIsNew(false);
-      const response = await fetch(`${API_BASE_URL}/course/${courseId}`);
+      const response = await fetch(`${API_BASE_URL}/courses/${courseId}`);
       if (!response.ok) {
         const message = `An error has occurred: ${response.statusText}`;
         console.error(message);
@@ -133,7 +133,7 @@ export default function Example() {
     try {
       let response;
       if (isNew) {
-        response = await fetch(`${API_BASE_URL}/createCourse`, {
+        response = await fetch(`${API_BASE_URL}/courses`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -156,7 +156,7 @@ export default function Example() {
     } catch (error) {
       console.error("A problem occurred with your fetch operation: ", error);
     } finally {
-      navigate("/courselist");
+      navigate("/courses");
     }
   }
 

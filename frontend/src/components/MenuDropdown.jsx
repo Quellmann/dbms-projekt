@@ -1,3 +1,5 @@
+import React from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 import {
   Popover,
   PopoverButton,
@@ -5,51 +7,84 @@ import {
   Transition,
 } from "@headlessui/react";
 import {
+  ArchiveBoxArrowDownIcon,
   ArrowRightEndOnRectangleIcon,
   Bars3Icon,
-  IdentificationIcon,
-  PencilSquareIcon,
-  QuestionMarkCircleIcon,
-  SquaresPlusIcon,
+  Cog6ToothIcon,
+  PlusIcon,
 } from "@heroicons/react/24/outline";
-import { NavLink } from "react-router-dom";
+
 import { useAuth } from "../context/UserContext";
 
-const solutions = [
+const loggedOutOptions = [
   {
-    name: "Account",
-    description: "Get a better understanding of your traffic",
-    href: "#",
-    icon: IdentificationIcon,
+    name: "Register",
+    href: "/register",
+    icon: PlusIcon,
   },
   {
-    name: "Edit my courses",
-    description: "Speak directly to your customers",
-    href: "/editMyCourses",
-    icon: PencilSquareIcon,
-  },
-  {
-    name: "Create new course",
-    description: "Connect with third-party tools",
-    href: "/createNewCourse",
-    icon: SquaresPlusIcon,
-  },
-  {
-    name: "Help",
-    description: "Your customers' data will be safe and secure",
-    href: "#",
-    icon: QuestionMarkCircleIcon,
-  },
-  {
-    name: "Log out",
-    description: "",
+    name: "Log In",
     href: "/login",
     icon: ArrowRightEndOnRectangleIcon,
   },
+  {
+    name: "Reset Password",
+    href: "/reset-password",
+    icon: ArchiveBoxArrowDownIcon,
+  },
 ];
+
+const studentOptions = [
+  {
+    name: "Settings",
+    href: "/me",
+    icon: Cog6ToothIcon,
+  },
+];
+
+// We should keep track of what courses each teacher
+// is responsible for and let them see a dash of the courses.
+// Likely we should probably not be showing them the course
+// material of other coursesa nd lectures.
+const teacherOptions = [
+  // {
+  //   name: "Manage Courses",
+  //   href: "/:teacherId/courses",
+  // },
+  // {
+  //   name: "Manage Lectures",
+  //   href: "/:teacherId/lectures",
+  // },
+];
+
+const adminOptions = [
+  // {
+  //   name: "Manage Users",
+  //   href: "/manage-users",
+  // },
+  // {
+  //   name: "Manage Courses",
+  //   href: "/manage-courses",
+  // },
+];
+
+function getOptions(user) {
+  if (!user) {
+    return loggedOutOptions;
+  } else if (user.role === "student") {
+    return studentOptions;
+  } else if (user.role === "teacher") {
+    return teacherOptions;
+  } else {
+    return adminOptions;
+  }
+}
 
 export default function MenuDropdown() {
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const dropdownOptions = getOptions(user);
 
   const handleLogout = () => {
     logout();
@@ -73,11 +108,9 @@ export default function MenuDropdown() {
         <PopoverPanel className="absolute -left-44 z-10 mt-5 flex w-screen max-w-max -translate-x-1/2 px-4">
           <div className="w-screen max-w-md flex-auto overflow-hidden rounded-3xl bg-white text-sm leading-6 shadow-lg ring-1 ring-gray-900/5 dark:bg-slate-800 dark:text-slate-200">
             <div className="p-4">
-              {solutions.map((item) => (
+              {dropdownOptions.map((item) => (
                 <NavLink
                   to={item.href}
-                  onClick={handleLogout}
-                  // className="font-semibold text-gray-900 dark:text-slate-200 dark:hover:text-sky-400 dark:hover:bg-sky-900"
                   key={item.name}
                   className="group relative flex items-center gap-x-6 rounded-lg p-4 hover:bg-gray-200  dark:hover:bg-sky-900"
                 >
@@ -90,6 +123,15 @@ export default function MenuDropdown() {
                   {item.name}
                 </NavLink>
               ))}
+              {user != null ? (
+                <NavLink
+                  onClick={handleLogout}
+                  key={"logout"}
+                  className="group relative flex items-center gap-x-6 rounded-lg p-4 hover:bg-gray-200  dark:hover:bg-sky-900"
+                >
+                  Log Out
+                </NavLink>
+              ) : null}
             </div>
           </div>
         </PopoverPanel>

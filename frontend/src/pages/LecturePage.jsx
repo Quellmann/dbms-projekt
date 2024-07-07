@@ -6,7 +6,7 @@ import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import CommentSection from "../components/CommentSection";
 import ReactPlayer from "react-player";
 
-const WatchLecture = () => {
+const LecturePage = () => {
   const { user } = useAuth();
   const params = useParams();
   const [lecture, setLecture] = useState({});
@@ -22,7 +22,7 @@ const WatchLecture = () => {
     async function fetchLecture() {
       try {
         const response = await fetch(
-          `${API_BASE_URL}/course/${params.courseId}/lecture/${params.lectureId}`
+          `${API_BASE_URL}/courses/${params.courseId}/lectures/${params.lectureId}`
         );
         const data = await response.json();
         setLecture(data);
@@ -49,7 +49,7 @@ const WatchLecture = () => {
         {["teacher", "admin"].includes(user.role) && (
           <div className="flex items-end">
             <Link
-              to={`/course/${params.courseId.toString()}/edit/${params.lectureId.toString()}`}
+              to={`/courses/${params.courseId.toString()}/edit/${params.lectureId.toString()}`}
               className=""
             >
               <PencilSquareIcon className="size-8 dark:text-slate-200"></PencilSquareIcon>
@@ -90,4 +90,4 @@ const WatchLecture = () => {
   );
 };
 
-export default WatchLecture;
+export default LecturePage;

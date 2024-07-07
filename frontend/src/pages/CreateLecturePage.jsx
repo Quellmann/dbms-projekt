@@ -10,7 +10,7 @@ import {
   DocumentPlusIcon,
 } from "@heroicons/react/24/outline";
 
-export default function Example() {
+export default function CreateLecturePage() {
   const navigate = useNavigate();
   const params = useParams();
   const { user } = useAuth();
@@ -36,7 +36,7 @@ export default function Example() {
       if (!lectureId) return;
       setIsNew(false);
       const response = await fetch(
-        `${API_BASE_URL}/course/${params.courseId}/lecture/${lectureId}`
+        `${API_BASE_URL}/courses/${params.courseId}/lectures/${lectureId}`
       );
       if (!response.ok) {
         const message = `An error has occurred: ${response.statusText}`;
@@ -62,7 +62,7 @@ export default function Example() {
       let response;
       if (isNew) {
         response = await fetch(
-          `${API_BASE_URL}/course/${params.courseId}/createLecture`,
+          `${API_BASE_URL}/courses/${params.courseId}/lectures`,
           {
             method: "POST",
             headers: {
@@ -73,7 +73,7 @@ export default function Example() {
         );
       } else {
         response = await fetch(
-          `${API_BASE_URL}/course/${params.courseId}/edit/${params.lectureId}`,
+          `${API_BASE_URL}/courses/${params.courseId}/edit/${params.lectureId}`,
           {
             method: "PATCH",
             headers: {
@@ -90,7 +90,7 @@ export default function Example() {
     } catch (error) {
       console.error("A problem occurred with your fetch operation: ", error);
     } finally {
-      navigate("/courselist");
+      navigate("/courses");
     }
   }
 

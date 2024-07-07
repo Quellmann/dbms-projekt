@@ -1,36 +1,44 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Home from "./pages/home";
-import Register from "./pages/register";
-import Login from "./pages/login";
-import ResetPassword from "./pages/reset-password";
-import CreatePassword from "./pages/create-password";
-import Layout from "./pages/layout";
-import AnonymousRoute from "./components/anonymous-route";
-import Me from "./pages/me";
-import CourseList from "./pages/CourseList";
-import CoursePage from "./pages/CoursePage";
-import CreateCourse from "./pages/CreateCourse";
-import WatchLecture from "./pages/WatchLecture";
-import CreateLecture from "./pages/CreateLecture";
-import ProtectedRoute from "./components/protected-route";
-import AdminDashboard from "./pages/admin-dashboard";
-import TeacherDashboard from "./pages/teacher-dashboard";
-import NotFound from "./pages/not-found";
 import { Toaster } from "react-hot-toast";
-import { useState } from "react";
+
+import AnonymousRoute from "./components/AnonymousRoute";
+import ProtectedRoute from "./components/ProtectedRoute";
+
+import Layout from "./pages/Layout";
+import LandingPage from "./pages/LandingPage";
+import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
+import CreatePasswordPage from "./pages/CreatePasswordPage";
+import ResetPasswordPage from "./pages/ResetPasswordPage";
+import NotFoundPage from "./pages/NotFoundPage";
+
+import AdminDashboardPage from "./pages/AdminDashboardPage";
+import TeacherDashboardPage from "./pages/TeacherDashboardPage";
+import StudentDashboardPage from "./pages/StudentDashboardPage";
+import UserSettingsPage from "./pages/UserSettingsPage";
+
+import CoursePage from "./pages/CoursePage";
+import CourseListPage from "./pages/CourseListPage";
+import CreateCoursePage from "./pages/CreateCoursePage";
+
+import LectureListPage from "./pages/LectureListPage";
+import LecturePage from "./pages/LecturePage";
+import CreateLecturePage from "./pages/CreateLecturePage";
 
 function App() {
-  const [search, setSearch] = useState("");
   return (
     <Router>
-      <Layout setSearch={setSearch}>
+      <Layout>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<LandingPage />} />
+
+          {/* -------------------------------------  */}
+          {/* User Account Management Related Pages  */}
           <Route
             path="/login"
             element={
               <AnonymousRoute>
-                <Login />
+                <LoginPage />
               </AnonymousRoute>
             }
           />
@@ -38,79 +46,37 @@ function App() {
             path="/register"
             element={
               <AnonymousRoute>
-                <Register />
+                <RegisterPage />
               </AnonymousRoute>
             }
           />
           <Route
+            path="/reset-password"
+            element={
+              <AnonymousRoute>
+                <ResetPasswordPage />
+              </AnonymousRoute>
+            }
+          />
+          <Route
+            path="/create-password/:token"
+            element={<CreatePasswordPage />}
+          />
+          <Route
             path="/me"
             element={
-              <ProtectedRoute roles={["student", "teacher", "admin"]}>
-                <Me />
+              <ProtectedRoute roles={["student"]}>
+                <UserSettingsPage />
               </ProtectedRoute>
             }
           />
+          {/* -------------------------------------  */}
+          {/* Dashboards  */}
           <Route
-            path="/courselist"
+            path="/dashboard"
             element={
               <ProtectedRoute roles={["student", "teacher", "admin"]}>
-                <CourseList search={search} />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/course/:courseId"
-            element={
-              <ProtectedRoute roles={["student", "teacher", "admin"]}>
-                <CoursePage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/course/:courseId/lecture/:lectureId"
-            element={
-              <ProtectedRoute roles={["student", "teacher", "admin"]}>
-                <WatchLecture />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/course/:courseId/createLecture"
-            element={
-              <ProtectedRoute roles={["teacher", "admin"]}>
-                <CreateLecture />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/course/:courseId/edit/:lectureId"
-            element={
-              <ProtectedRoute roles={["teacher", "admin"]}>
-                <CreateLecture />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/createCourse"
-            element={
-              <ProtectedRoute roles={["teacher", "admin"]}>
-                <CreateCourse />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/edit/:id"
-            element={
-              <ProtectedRoute roles={["teacher", "admin"]}>
-                <CreateCourse />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/teacher-dashboard"
-            element={
-              <ProtectedRoute roles={["teacher"]}>
-                <TeacherDashboard />
+                <StudentDashboardPage />
               </ProtectedRoute>
             }
           />
@@ -118,13 +84,85 @@ function App() {
             path="/admin-dashboard"
             element={
               <ProtectedRoute roles={["admin"]}>
-                <AdminDashboard />
+                <AdminDashboardPage />
               </ProtectedRoute>
             }
           />
-          <Route path="/reset-password" element={<ResetPassword />} />
-          <Route path="/create-password/:token" element={<CreatePassword />} />
-          <Route path="*" element={<NotFound />} />
+          <Route
+            path="/teacher-dashboard"
+            element={
+              <ProtectedRoute roles={["teacher"]}>
+                <TeacherDashboardPage />
+              </ProtectedRoute>
+            }
+          />
+          {/* -------------------------------------  */}
+          {/* Courses & Lectures  */}
+          <Route
+            path="/courses"
+            element={
+              <ProtectedRoute roles={["student", "teacher", "admin"]}>
+                <CourseListPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/courses/create"
+            element={
+              <ProtectedRoute roles={["teacher", "admin"]}>
+                <CreateCoursePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/courses/:courseId"
+            element={
+              <ProtectedRoute roles={["student", "teacher", "admin"]}>
+                <CoursePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/courses/:courseId/edit"
+            element={
+              <ProtectedRoute roles={["teacher", "admin"]}>
+                <CreateCoursePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/courses/:courseId/lectures"
+            element={
+              <ProtectedRoute roles={["student", "teacher", "admin"]}>
+                <LectureListPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/courses/:courseId/lectures/create"
+            element={
+              <ProtectedRoute roles={["teacher", "admin"]}>
+                <CreateLecturePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/courses/:courseId/lectures/:lectureId"
+            element={
+              <ProtectedRoute roles={["student", "teacher", "admin"]}>
+                <LecturePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/courses/:courseId/lectures/:lectureId/edit"
+            element={
+              <ProtectedRoute roles={["teacher", "admin"]}>
+                <CreateLecturePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
         <Toaster position="bottom-center" />
       </Layout>

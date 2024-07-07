@@ -26,7 +26,7 @@ function CoursePage() {
     async function getCourse() {
       try {
         const response = await fetch(
-          `${API_BASE_URL}/course/${params.courseId.toString()}`
+          `${API_BASE_URL}/courses/${params.courseId.toString()}`
         );
         const data = await response.json();
         setCourse(data);
@@ -39,7 +39,7 @@ function CoursePage() {
     async function getLectures() {
       try {
         const response = await fetch(
-          `${API_BASE_URL}/course/${params.courseId.toString()}/lectures`
+          `${API_BASE_URL}/courses/${params.courseId.toString()}/lectures`
         );
         const data = await response.json();
         setLectures(data);
@@ -64,10 +64,13 @@ function CoursePage() {
         </div>
         {["teacher", "admin"].includes(user.role) && (
           <div className="flex items-end gap-2">
-            <Link to={`/edit/${params.courseId.toString()}`} className="">
+            <Link
+              to={`/courses/${params.courseId.toString()}/edit`}
+              className=""
+            >
               <PencilSquareIcon className="size-8 dark:text-slate-200"></PencilSquareIcon>
             </Link>
-            <Link to={`/course/${params.courseId.toString()}/createLecture`}>
+            <Link to={`/courses/${params.courseId.toString()}/lectures/create`}>
               <PlusCircleIcon className="size-8 dark:text-slate-200"></PlusCircleIcon>
             </Link>
           </div>
@@ -81,7 +84,7 @@ function CoursePage() {
             </div>
             {mostRecentLecture && (
               <VideoCard
-                path={`/course/${params.courseId.toString()}/lecture/${
+                path={`/courses/${params.courseId.toString()}/lectures/${
                   mostRecentLecture._id
                 }
               `}
@@ -133,8 +136,8 @@ function CoursePage() {
                 <div className="">
                   Last Updated:{" "}
                   <span className="font-bold">
-                    {course.lastUpdate
-                      ? formatDistanceToNow(new Date(course.lastUpdate), {
+                    {course.updatedAt
+                      ? formatDistanceToNow(new Date(course.updatedAt), {
                           addSuffix: true,
                         })
                       : ""}
@@ -162,7 +165,7 @@ function CoursePage() {
           {lectures.map((lecture) => (
             <VideoCard
               key={lecture._id}
-              path={`/course/${params.courseId.toString()}/lecture/${
+              path={`/courses/${params.courseId.toString()}/lectures/${
                 lecture._id
               }
           `}

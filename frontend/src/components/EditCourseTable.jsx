@@ -19,13 +19,13 @@ const TableRow = (props) => (
       {props.course.isOpenToEnroll.toString()}
     </td>
     <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
-      {props.course.lastUpdate}
+      {props.course.updatedAt}
     </td>
     <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
       <div className="flex gap-2">
         <Link
           className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-slate-100 dark:hover:bg-sky-900 dark:hover:text-sky-400 h-9 rounded-md px-3"
-          to={`/edit/${props.course._id}`}
+          to={`/courses/${props.course._id}/edit`}
         >
           Edit
         </Link>
@@ -50,7 +50,7 @@ export default function CourseTable() {
   // This method fetches the records from the database.
   useEffect(() => {
     async function getCourses() {
-      const response = await fetch(`http://localhost:5050/courselist/`);
+      const response = await fetch(`http://localhost:5050/courses/`);
       if (!response.ok) {
         const message = `An error occurred: ${response.statusText}`;
         console.error(message);
@@ -65,7 +65,7 @@ export default function CourseTable() {
 
   // This method will delete a record
   async function deleteCourse(id) {
-    await fetch(`http://localhost:5050/course/${id}`, {
+    await fetch(`http://localhost:5050/courses/${id}`, {
       method: "DELETE",
     });
     const newCourses = courses.filter((el) => el._id !== id);

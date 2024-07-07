@@ -3,7 +3,7 @@ import { Lecture } from "../models/lecture.js";
 export async function getLecturesByCourse(req, res) {
   try {
     const lectures = await Lecture.find({ course: req.params.courseId }).sort({
-      lastUpdate: -1,
+      updatedAt: -1,
     });
     res.status(200).json(lectures);
   } catch (error) {
@@ -26,12 +26,12 @@ export async function getLectureById(req, res) {
 export async function setLecture(req, res) {
   try {
     const lecture = await Lecture.create({
+      courseId: req.params.courseId,
       title: req.body.title,
       description: req.body.description,
       videoUrl: req.body.videoUrl,
       thumbnailUrl: req.body.thumbnailUrl,
       pdfUrl: req.body.pdfUrl,
-      course: req.params.courseId,
     });
     res.status(200).json(lecture);
   } catch (error) {

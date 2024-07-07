@@ -15,7 +15,7 @@ export default function VideoCard(params) {
         <div className="flex justify-between text-sm dark:text-slate-400">
           <div>Views: {params.data.views}</div>
           <div>
-            {formatDistanceToNow(new Date(params.data.lastUpdate), {
+            {formatDistanceToNow(new Date(params.data.updatedAt), {
               addSuffix: true,
             })}
           </div>

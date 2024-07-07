@@ -7,9 +7,9 @@ import {
 const router = Router();
 
 router.get(
-  "/course/:courseId/lecture/:lectureId/getComments",
+  "/courses/:courseId/lectures/:lectureId/comments",
   getCommentsByLecture
 );
-router.post("/course/:courseId/lecture/:lectureId/setComment", setComment);
+router.post("/courses/:courseId/lectures/:lectureId/comments", setComment);
 
 export default router;

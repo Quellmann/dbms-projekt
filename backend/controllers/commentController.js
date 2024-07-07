@@ -10,7 +10,7 @@ export async function getCommentsByLecture(req, res) {
         select: "username email",
       })
       .sort({
-        lastUpdate: 1,
+        updatedAt: 1,
       });
     res.status(200).json(comments);
   } catch (error) {
@@ -23,7 +23,7 @@ export async function setComment(req, res) {
   try {
     const comment = await Comment.create({
       text: req.body.text,
-      user: req.body.userId,
+      userId: req.body.userId,
       lectureId: req.body.lectureId,
     });
     res.status(200).json(comment);

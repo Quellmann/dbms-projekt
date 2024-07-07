@@ -4,7 +4,7 @@ import { useAuth } from "../context/UserContext";
 import ReCAPTCHA from "react-google-recaptcha";
 import { API_BASE_URL } from "../config";
 
-const Register = () => {
+const RegisterPage = () => {
   const recaptcha = useRef();
   const { login } = useAuth();
   const [formData, setFormData] = useState({
@@ -142,4 +142,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default RegisterPage;

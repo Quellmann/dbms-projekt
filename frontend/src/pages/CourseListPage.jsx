@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import { API_BASE_URL } from "../config";
 import { useAuth } from "../context/UserContext";
 
-export default function CourseList({ search }) {
+export default function CourseListPage({ search }) {
   const [courses, setCourses] = useState([]);
   const { user } = useAuth();
 
@@ -37,7 +37,7 @@ export default function CourseList({ search }) {
         </div>
         <div>
           {["teacher", "admin"].includes(user.role) && (
-            <Link to="/createCourse">
+            <Link to="/courses/create">
               <PlusCircleIcon className="size-8 dark:text-slate-200"></PlusCircleIcon>
             </Link>
           )}
@@ -48,7 +48,7 @@ export default function CourseList({ search }) {
           .filter((course) => (search ? course.name.includes(search) : course))
           .map((course) => (
             <Link
-              to={`/course/${course._id}`}
+              to={`/courses/${course._id}`}
               key={course._id}
               className="flex cursor-pointer group rounded-lg p-5 bg-gray-50 hover:bg-gray-200 justify-between dark:hover:bg-sky-900 dark:bg-slate-800"
             >
@@ -70,7 +70,7 @@ export default function CourseList({ search }) {
               <div className="flex gap-x-6">
                 <div className="hidden shrink-0 sm:flex sm:flex-col sm:items-end">
                   <p className="text-sm leading-6 text-gray-900 dark:text-slate-400">
-                    Updated {new Date(course.lastUpdate).toLocaleString()}
+                    Updated {new Date(course.updatedAt).toLocaleString()}
                   </p>
                   {course.isOpenToEnroll ? (
                     <div className="mt-1 flex items-center gap-x-1.5">

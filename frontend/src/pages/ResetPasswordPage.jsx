@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { API_BASE_URL } from "../config";
 import toast from "react-hot-toast";
 
-const ResetPassword = () => {
+const ResetPasswordPage = () => {
   const [email, setEmail] = useState("");
 
   const handleChange = (e) => {
@@ -78,4 +78,4 @@ const ResetPassword = () => {
   );
 };
 
-export default ResetPassword;
+export default ResetPasswordPage;

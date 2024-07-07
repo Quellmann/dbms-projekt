@@ -4,7 +4,7 @@ import { useAuth } from "../context/UserContext";
 import ReCAPTCHA from "react-google-recaptcha";
 import { API_BASE_URL } from "../config";
 
-const Login = () => {
+const LoginPage = () => {
   const recaptcha = useRef();
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -48,7 +48,7 @@ const Login = () => {
         throw new Error(data.message || "Login failed");
       }
       login(data.token);
-      navigate(location.state?.from || "/me");
+      navigate(location.state?.from || "/dashboard");
     } catch (error) {
       setError(error.message);
     }
@@ -116,4 +116,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default LoginPage;

@@ -21,7 +21,7 @@ const CommentSection = () => {
     async function setComment() {
       try {
         await fetch(
-          `${API_BASE_URL}/course/${params.courseId}/lecture/${params.lectureId}/setComment`,
+          `${API_BASE_URL}/courses/${params.courseId}/lectures/${params.lectureId}/comments`,
           {
             method: "POST",
             headers: {
@@ -47,7 +47,7 @@ const CommentSection = () => {
   async function fetchComments() {
     try {
       const response = await fetch(
-        `${API_BASE_URL}/course/${params.courseId}/lecture/${params.lectureId}/getComments`
+        `${API_BASE_URL}/courses/${params.courseId}/lectures/${params.lectureId}/comments`
       );
       const data = await response.json();
       setComments(data);
@@ -59,7 +59,7 @@ const CommentSection = () => {
     async function fetchComments() {
       try {
         const response = await fetch(
-          `${API_BASE_URL}/course/${params.courseId}/lecture/${params.lectureId}/getComments`
+          `${API_BASE_URL}/courses/${params.courseId}/lectures/${params.lectureId}/comments`
         );
         const data = await response.json();
         setComments(data);
@@ -77,7 +77,7 @@ const CommentSection = () => {
         <div>
           <span className=" dark:text-slate-200">{comment.user.username}</span>
           <span className="ml-2 text-sm font-thin dark:text-slate-400">
-            {formatDistanceToNow(comment.lastUpdate, {
+            {formatDistanceToNow(comment.updatedAt, {
               addSuffix: true,
             })}
           </span>
