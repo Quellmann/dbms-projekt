@@ -1,14 +1,16 @@
-import mongoose from "mongoose";
+import { model, Schema } from "mongoose";
 
-const LectureSchema = new mongoose.Schema({
-  title: { type: String, required: true },
-  description: { type: String, required: false },
-  videoUrl: { type: String, required: false },
-  thumbnailUrl: { type: String, required: false },
-  pdfUrl: { type: String, required: false },
-  course: { type: mongoose.Schema.ObjectId, ref: "Course", required: true }, // Reference to the Course model
-  views: { type: Number, default: 0 },
-  lastUpdate: { type: Date, default: Date.now },
-});
+const LectureSchema = new Schema(
+  {
+    courseId: { type: Schema.ObjectId, ref: "Course", required: true },
+    title: { type: String, required: true },
+    description: { type: String, required: false },
+    videoUrl: { type: String, required: false },
+    thumbnailUrl: { type: String, required: false },
+    pdfUrl: { type: String, required: false },
+    views: { type: Number, default: 0 },
+  },
+  { timestamps: true }
+);
 
-export const Lecture = mongoose.model("Lecture", LectureSchema);
+export const Lecture = model("Lecture", LectureSchema);

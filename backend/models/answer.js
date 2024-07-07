@@ -1,24 +1,21 @@
 import { model, Schema, Types } from "mongoose";
 
-const commentSchema = new Schema(
+const AnswerSchema = new Schema(
   {
-    lectureId: {
+    lectureQuestionId: {
       type: Types.ObjectId,
-      ref: "Lecture",
       required: true,
     },
-    userId: {
+    studentId: {
       type: Types.ObjectId,
-      ref: "User",
       required: true,
     },
-    text: {
-      type: String,
+    answeredCorrectly: {
+      type: Boolean,
       required: true,
-      trim: true,
     },
   },
   { timestamps: true }
 );
 
-export const Comment = model("Comment", commentSchema);
+export const Answer = model("Answer", AnswerSchema);
