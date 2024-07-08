@@ -13,9 +13,9 @@ import CreatePasswordPage from "./pages/CreatePasswordPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import NotFoundPage from "./pages/NotFoundPage";
 
+import DashboardPage from "./pages/Dashboard";
 import AdminDashboardPage from "./pages/AdminDashboardPage";
 import TeacherDashboardPage from "./pages/TeacherDashboardPage";
-import StudentDashboardPage from "./pages/StudentDashboardPage";
 import UserSettingsPage from "./pages/UserSettingsPage";
 
 import CoursePage from "./pages/CoursePage";
@@ -79,26 +79,26 @@ function App() {
             path="/dashboard"
             element={
               <ProtectedRoute roles={["student", "teacher", "admin"]}>
-                <StudentDashboardPage />
+                <DashboardPage />
               </ProtectedRoute>
             }
           />
           <Route
-            path="/admin-dashboard"
-            element={
-              <ProtectedRoute roles={["admin"]}>
-                <AdminDashboardPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/teacher-dashboard"
-            element={
-              <ProtectedRoute roles={["teacher"]}>
-                <TeacherDashboardPage />
-              </ProtectedRoute>
-            }
-          />
+						path="/teacher/users"
+						element={
+							<ProtectedRoute roles={["teacher"]}>
+								<TeacherDashboardPage />
+							</ProtectedRoute>
+						}
+					/>
+					<Route
+						path="/admin/users"
+						element={
+							<ProtectedRoute roles={["admin"]}>
+								<AdminDashboardPage />
+							</ProtectedRoute>
+						}
+					/>
           {/* -------------------------------------  */}
           {/* Courses & Lectures  */}
           <Route

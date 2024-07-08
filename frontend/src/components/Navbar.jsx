@@ -12,13 +12,6 @@ import DarkmodeToggle from "./DarkmodeToggle";
 export default function Navbar({ setSearch }) {
   const { user } = useAuth();
 
-  const userDashboard =
-    user?.role === "student"
-      ? "/dashboard"
-      : user?.role === "teacher"
-      ? "/teacher-dashboard"
-      : "admin-dashboard";
-
   return (
     <header className="border-b border-slate-900/10 dark:border-slate-300/10">
       <nav
@@ -30,10 +23,10 @@ export default function Navbar({ setSearch }) {
           <Link to="/">
             <img className="h-14 w-auto" src="/goethe-uni-book.png" alt="" />
           </Link>
-          {user ? (
+          {user && (
             <>
               <NavLink
-                to={userDashboard}
+                to={"/dashboard"}
                 className="hidden sm:flex rounded-lg py-2 px-3 text-sm font-semibold leading-7 text-gray-900 hover:bg-gray-200 dark:text-slate-200 dark:hover:text-sky-400 dark:hover:bg-sky-900"
               >
                 <HomeIcon className="h-6 w-6" aria-hidden="true"></HomeIcon>
@@ -50,7 +43,7 @@ export default function Navbar({ setSearch }) {
                 <span className="ml-2">Courses</span>
               </NavLink>{" "}
             </>
-          ) : null}
+          )}
         </div>
 
         <div className="hidden md:flex flex-1 justify-center">

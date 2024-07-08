@@ -75,7 +75,7 @@ const AdminDashboardPage = () => {
       className="container mx-auto mb-auto p-4"
       style={{ maxHeight: "100%" }}
     >
-      <header className="sticky top-3 bg-gray-100 z-10">
+      <header className="sticky top-3 z-10">
         <h1 className="text-2xl font-bold mb-6 text-center">Admin Dashboard</h1>
         {error && <p className="text-red-500">{error}</p>}
         <div className="mb-4">
