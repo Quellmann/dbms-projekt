@@ -11,23 +11,25 @@ import { sendEmail } from "../utils/email.js";
 export async function login(req, res) {
   const { identifier, password, captchaValue } = req.body;
 
-  try {
-    const verifyResponse = await fetch(
-      `https://www.google.com/recaptcha/api/siteverify?secret=${RECAPTCHA_SECRET_KEY}&response=${captchaValue}`,
-      {
-        method: "POST",
+  if (process.env.ENVIRONMENT !== "dev") {
+    try {
+      const verifyResponse = await fetch(
+        `https://www.google.com/recaptcha/api/siteverify?secret=${RECAPTCHA_SECRET_KEY}&response=${captchaValue}`,
+        {
+          method: "POST",
+        }
+      );
+
+      const data = await verifyResponse.json();
+
+      if (!data.success) {
+        console.error("Invalid reCAPTCHA token", data);
+        return res.status(400).json({ message: "Invalid reCAPTCHA token" });
       }
-    );
-
-    const data = await verifyResponse.json();
-
-    if (!data.success) {
-      console.error("Invalid reCAPTCHA token", data);
-      return res.status(400).json({ message: "Invalid reCAPTCHA token" });
+    } catch (error) {
+      console.error("Error verifying reCAPTCHA token:", error);
+      return res.status(500).json({ message: "Internal server error" });
     }
-  } catch (error) {
-    console.error("Error verifying reCAPTCHA token:", error);
-    return res.status(500).json({ message: "Internal server error" });
   }
 
   try {
@@ -59,23 +61,25 @@ export async function login(req, res) {
 export async function register(req, res) {
   const { username, email, password, captchaValue } = req.body;
 
-  try {
-    const verifyResponse = await fetch(
-      `https://www.google.com/recaptcha/api/siteverify?secret=${RECAPTCHA_SECRET_KEY}&response=${captchaValue}`,
-      {
-        method: "POST",
+  if (process.env.ENVIRONMENT !== "dev") {
+    try {
+      const verifyResponse = await fetch(
+        `https://www.google.com/recaptcha/api/siteverify?secret=${RECAPTCHA_SECRET_KEY}&response=${captchaValue}`,
+        {
+          method: "POST",
+        }
+      );
+
+      const data = await verifyResponse.json();
+
+      if (!data.success) {
+        console.error("Invalid reCAPTCHA token", data);
+        return res.status(400).json({ message: "Invalid reCAPTCHA token" });
       }
-    );
-
-    const data = await verifyResponse.json();
-
-    if (!data.success) {
-      console.error("Invalid reCAPTCHA token", data);
-      return res.status(400).json({ message: "Invalid reCAPTCHA token" });
+    } catch (error) {
+      console.error("Error verifying reCAPTCHA token:", error);
+      return res.status(500).json({ message: "Internal server error" });
     }
-  } catch (error) {
-    console.error("Error verifying reCAPTCHA token:", error);
-    return res.status(500).json({ message: "Internal server error" });
   }
 
   try {

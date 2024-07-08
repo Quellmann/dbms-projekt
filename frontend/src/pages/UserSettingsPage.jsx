@@ -29,8 +29,6 @@ const UserSettingsPage = () => {
       password: password ? password : null,
     };
 
-    console.log(updatedUser);
-
     // if (result.success) {
     // 	setSuccess("Profile updated successfully");
     // 	setError("");

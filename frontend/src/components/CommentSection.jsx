@@ -63,7 +63,6 @@ const CommentSection = () => {
         );
         const data = await response.json();
         setComments(data);
-        console.log(data);
       } catch (error) {
         console.error(error);
       }

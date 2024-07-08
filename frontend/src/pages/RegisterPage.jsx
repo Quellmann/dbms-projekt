@@ -26,12 +26,14 @@ const RegisterPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    let captchaValue = "";
+    if (import.meta.env.MODE === "production") {
+      captchaValue = recaptcha.current.getValue();
 
-    const captchaValue = recaptcha.current.getValue();
-
-    if (!captchaValue) {
-      setError("Please complete the reCAPTCHA");
-      return;
+      if (!captchaValue) {
+        setError("Please complete the reCAPTCHA");
+        return;
+      }
     }
 
     if (formData.password !== formData.confirmPassword) {
@@ -48,11 +50,13 @@ const RegisterPage = () => {
 
       const data = await response.json();
       if (!response.ok) {
-        recaptcha.current.reset();
+        if (import.meta.env.MODE === "production") {
+          recaptcha.current.reset();
+        }
         throw new Error(data.message || "Registration failed");
       }
       login(data.token);
-      navigate("/me");
+      navigate("/dashboard");
     } catch (error) {
       setError(error.message);
     }
@@ -119,12 +123,14 @@ const RegisterPage = () => {
             required
           />
         </div>
-        <div className="mb-4">
-          <ReCAPTCHA
-            sitekey="6Leb0f0pAAAAAEIHe2ZYSnst33YlW16v1F_TWUb2"
-            ref={recaptcha}
-          />
-        </div>
+        {import.meta.env.MODE === "production" ? (
+          <div className="mb-4">
+            <ReCAPTCHA
+              sitekey="6Leb0f0pAAAAAEIHe2ZYSnst33YlW16v1F_TWUb2"
+              ref={recaptcha}
+            />
+          </div>
+        ) : null}
         <button
           type="submit"
           className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition duration-200"

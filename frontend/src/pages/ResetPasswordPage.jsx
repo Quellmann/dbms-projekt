@@ -33,7 +33,6 @@ const ResetPasswordPage = () => {
 
       toast.dismiss();
       toast.success("Email sent successfully");
-      console.log(data);
     } catch (error) {
       console.error(error);
     }

@@ -36,7 +36,6 @@ const CreatePasswordPage = () => {
         throw new Error(data.message || "Password reset failed");
       }
 
-      console.log(data);
       navigate("/login");
     } catch (error) {
       console.error(error);
