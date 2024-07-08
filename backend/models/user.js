@@ -21,7 +21,6 @@ const UserSchema = new Schema({
     default: "student",
   },
   passwordResetToken: String,
-  passwordResetTokenCreatedAt: Date,
 });
 
 export const User = model("User", UserSchema);

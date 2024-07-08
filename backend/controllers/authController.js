@@ -135,7 +135,6 @@ export async function resetPassword(req, res) {
     const token = jwt.sign({ email }, JWT_SECRET, { expiresIn: "10m" });
 
     user.passwordResetToken = await bcrypt.hash(token, 10);
-    user.passwordResetTokenCreatedAt = new Date();
     await user.save();
 
     const resetLink = `${BASE_URL_FOR_EMAIL}/create-password/${token}`;
@@ -161,7 +160,11 @@ export async function createPassword(req, res) {
   try {
     decodedToken = jwt.verify(token, JWT_SECRET);
   } catch (error) {
-    return res.status(400).json({ message: "Invalid token" });
+    if (error.name === 'TokenExpiredError') {
+      return res.status(400).json({ message: "Link has expired"});
+    } else {
+      return res.status(400).json({ message: "Invalid token" });
+    }
   }
 
   try {
@@ -181,13 +184,11 @@ export async function createPassword(req, res) {
       return res.status(400).json({ message: "Invalid token" });
     }
 
-    const currentTime = new Date();
-    const tokenValidTill = new Date(user.passwordResetTokenCreatedAt);
-    tokenValidTill.setHours(tokenValidTill.getHours() + 1);
-
-    if (currentTime > tokenValidTill) {
-      console.log("Token expired");
-      return res.status(400).json({ message: "Token expired" });
+    // new password cannot be the same as the old password
+    if (await bcrypt.compare(password, user.password)) {
+      return res
+        .status(400)
+        .json({ message: "New password cannot be the same as the old password" });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -200,7 +201,6 @@ export async function createPassword(req, res) {
       {
         $unset: {
           passwordResetToken: "",
-          passwordResetTokenCreatedAt: "",
         },
       }
     );
