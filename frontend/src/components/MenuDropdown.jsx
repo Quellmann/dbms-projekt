@@ -47,6 +47,11 @@ const studentOptions = [
 // Likely we should probably not be showing them the course
 // material of other coursesa nd lectures.
 const teacherOptions = [
+  {
+    name: "Settings",
+    href: "/me",
+    icon: Cog6ToothIcon,
+  },
   // {
   //   name: "Manage Courses",
   //   href: "/:teacherId/courses",
@@ -58,13 +63,14 @@ const teacherOptions = [
 ];
 
 const adminOptions = [
+  {
+    name: "Settings",
+    href: "/me",
+    icon: Cog6ToothIcon,
+  },
   // {
   //   name: "Manage Users",
   //   href: "/manage-users",
-  // },
-  // {
-  //   name: "Manage Courses",
-  //   href: "/manage-courses",
   // },
 ];
 

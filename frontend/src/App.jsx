@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 
@@ -26,9 +27,11 @@ import LecturePage from "./pages/LecturePage";
 import CreateLecturePage from "./pages/CreateLecturePage";
 
 function App() {
+  const [search, setSearch] = useState("");
+
   return (
     <Router>
-      <Layout>
+      <Layout setSearch={setSearch}>
         <Routes>
           <Route path="/" element={<LandingPage />} />
 
@@ -65,7 +68,7 @@ function App() {
           <Route
             path="/me"
             element={
-              <ProtectedRoute roles={["student"]}>
+              <ProtectedRoute roles={["student", "teacher", "admin"]}>
                 <UserSettingsPage />
               </ProtectedRoute>
             }
@@ -102,7 +105,7 @@ function App() {
             path="/courses"
             element={
               <ProtectedRoute roles={["student", "teacher", "admin"]}>
-                <CourseListPage />
+                <CourseListPage search={search} />
               </ProtectedRoute>
             }
           />
