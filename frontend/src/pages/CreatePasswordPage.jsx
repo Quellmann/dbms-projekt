@@ -5,6 +5,7 @@ import { API_BASE_URL } from "../config";
 const CreatePasswordPage = () => {
   const navigate = useNavigate();
   const { token } = useParams();
+  const [error, setError] = useState("");
   const [formData, setFormData] = useState({
     newPassword: "",
     confirmNewPassword: "",
@@ -12,6 +13,7 @@ const CreatePasswordPage = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    setError("");
     setFormData({
       ...formData,
       [name]: value,
@@ -20,6 +22,11 @@ const CreatePasswordPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (formData.newPassword !== formData.confirmNewPassword) {
+      setError("Passwords do not match");
+      return;
+    }
 
     try {
       const response = await fetch(`${API_BASE_URL}/create-password/${token}`, {
@@ -38,15 +45,17 @@ const CreatePasswordPage = () => {
 
       navigate("/login");
     } catch (error) {
+      setError(error.message);
       console.error(error);
     }
   };
 
   return (
-    <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
+    <div className="w-full max-w-md mx-auto p-6 bg-white shadow-md rounded-lg mt-10">
       <h2 className="text-2xl font-bold mb-6 text-center">
         Create New Password
       </h2>
+      {error && <p className="text-red-500">{error}</p>}
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
           <label className="block text-gray-700 mb-2" htmlFor="newPassword">
